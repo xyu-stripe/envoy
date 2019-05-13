@@ -89,10 +89,10 @@ OptionsImpl::OptionsImpl(int argc, const char* const* argv,
                                     "One of 'serve' (default; validate configs and then serve "
                                     "traffic normally) or 'validate' (validate configs and exit).",
                                     false, "serve", "string", cmd);
-  TCLAP::ValueArg<uint64_t> max_stats("", "max-stats",
+  TCLAP::ValueArg<uint32_t> max_stats("", "max-stats",
                                       "Deprecated and unused; please do not specify.", false, 123,
                                       "uint64_t", cmd);
-  TCLAP::ValueArg<uint64_t> max_obj_name_len("", "max-obj-name-len",
+  TCLAP::ValueArg<uint32_t> max_obj_name_len("", "max-obj-name-len",
                                              "Deprecated and unused; please do not specify.", false,
                                              123, "uint64_t", cmd);
   TCLAP::SwitchArg disable_hot_restart("", "disable-hot-restart",
