@@ -226,20 +226,24 @@ const FilterUtility::StrictHeaderChecker::HeaderCheckResult
 FilterUtility::StrictHeaderChecker::test(Http::HeaderMap& headers,
                                          const Http::LowerCaseString& target_header) {
   HeaderCheckResult r;
-  auto all = Http::Headers::get();
-  if (target_header == all.EnvoyUpstreamRequestTimeoutMs) {
-    return is_integral(headers.EnvoyUpstreamRequestTimeoutMs());
-  } else if (target_header == all.EnvoyUpstreamRequestPerTryTimeoutMs) {
-    return is_integral(headers.EnvoyUpstreamRequestPerTryTimeoutMs());
-  } else if (target_header == all.EnvoyMaxRetries) {
-    return is_integral(headers.EnvoyMaxRetries());
-  } else if (target_header == all.EnvoyRetryOn) {
-    return has_valid_retry_fields(headers.EnvoyRetryOn(),
+  if (target_header == Http::Headers::get().EnvoyUpstreamRequestTimeoutMs) {
+    return isInteger(headers.EnvoyUpstreamRequestTimeoutMs());
+  } else if (target_header == Http::Headers::get().EnvoyUpstreamRequestPerTryTimeoutMs) {
+    return isInteger(headers.EnvoyUpstreamRequestPerTryTimeoutMs());
+  } else if (target_header == Http::Headers::get().EnvoyMaxRetries) {
+    return isInteger(headers.EnvoyMaxRetries());
+  } else if (target_header == Http::Headers::get().EnvoyRetryOn) {
+    return hasValidRetryFields(headers.EnvoyRetryOn(),
                                   &Router::RetryStateImpl::parseRetryOnStrict);
-  } else if (target_header == all.EnvoyRetryGrpcOn) {
-    return has_valid_retry_fields(headers.EnvoyRetryGrpcOn(),
+  } else if (target_header == Http::Headers::get().EnvoyRetryGrpcOn) {
+    return hasValidRetryFields(headers.EnvoyRetryGrpcOn(),
                                   &Router::RetryStateImpl::parseRetryGrpcOnStrict);
   }
+  // TODO(xyu): assert or log here?
+  // ENVOY_LOG_MISC(warn, "Strict header validation is unsupported for '{}'");
+  // else {
+  //   ASSERT(false); // Is validating a header that is unsupported is really exceptional?
+  // }
 
   return r;
 }
@@ -405,11 +409,11 @@ Http::FilterHeadersStatus Filter::decodeHeaders(Http::HeaderMap& headers, bool e
 
   if (!config_.strict_check_headers_.empty()) {
     for (const auto& header : config_.strict_check_headers_) {
-      auto res = FilterUtility::StrictHeaderChecker::test(headers, header);
+      const auto res = FilterUtility::StrictHeaderChecker::test(headers, header);
       if (!res.valid_) {
         callbacks_->streamInfo().setResponseFlag(
             StreamInfo::ResponseFlag::InvalidEnvoyRequestHeaders);
-        std::string body = fmt::format("invalid header '{}' with value '{}'",
+        const std::string body = fmt::format("invalid header '{}' with value '{}'",
                                        std::string(res.entry_->key().getStringView()),
                                        std::string(res.entry_->value().getStringView()));
         const std::string details =
