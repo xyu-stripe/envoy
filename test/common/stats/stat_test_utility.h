@@ -79,10 +79,13 @@ private:
   do {                                                                                             \
     if (expected_value == 0 ||                                                                     \
         Stats::TestUtil::MemoryTest::mode() == Stats::TestUtil::MemoryTest::Mode::Canonical) {     \
+      ENVOY_LOG_MISC(warn,                                                                         \
+                     "xyu-debug: Exact memory test: actual={} versus expected={} ",                \
+                     consumed_bytes, expected_value);                                              \
       EXPECT_EQ(consumed_bytes, expected_value);                                                   \
     } else {                                                                                       \
-      ENVOY_LOG_MISC(info,                                                                         \
-                     "Skipping exact memory test of actual={} versus expected={} "                 \
+      ENVOY_LOG_MISC(warn,                                                                         \
+                     "xyu-debug: Skipping exact memory test of actual={} versus expected={} "                 \
                      "bytes as platform is non-canonical",                                         \
                      consumed_bytes, expected_value);                                              \
     }                                                                                              \

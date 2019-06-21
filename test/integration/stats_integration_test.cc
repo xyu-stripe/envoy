@@ -31,7 +31,7 @@ public:
 
   void initialize() override { BaseIntegrationTest::initialize(); }
 };
-
+/*
 INSTANTIATE_TEST_SUITE_P(IpVersions, StatsIntegrationTest,
                          testing::ValuesIn(TestEnvironment::getIpVersionsForTest()),
                          TestUtility::ipTestParamsToString);
@@ -135,7 +135,7 @@ TEST_P(StatsIntegrationTest, WithTagSpecifierWithFixedValue) {
   EXPECT_EQ(live->tags()[0].name_, "test.x");
   EXPECT_EQ(live->tags()[0].value_, "xxx");
 }
-
+*/
 // TODO(cmluciano) Refactor once https://github.com/envoyproxy/envoy/issues/5624 is solved
 // TODO(cmluciano) Add options to measure multiple workers & without stats
 // This class itself does not add additional tests. It is a helper for use in other tests measuring
