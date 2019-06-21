@@ -234,16 +234,14 @@ FilterUtility::StrictHeaderChecker::test(Http::HeaderMap& headers,
     return isInteger(headers.EnvoyMaxRetries());
   } else if (target_header == Http::Headers::get().EnvoyRetryOn) {
     return hasValidRetryFields(headers.EnvoyRetryOn(),
-                                  &Router::RetryStateImpl::parseRetryOnStrict);
+                                  &Router::RetryStateImpl::parseRetryOn);
   } else if (target_header == Http::Headers::get().EnvoyRetryGrpcOn) {
     return hasValidRetryFields(headers.EnvoyRetryGrpcOn(),
-                                  &Router::RetryStateImpl::parseRetryGrpcOnStrict);
+                                  &Router::RetryStateImpl::parseRetryGrpcOn);
+  } else {
+    // Should only validate headers for which we have implemented a validator
+    ASSERT(false);
   }
-  // TODO(xyu): assert or log here?
-  // ENVOY_LOG_MISC(warn, "Strict header validation is unsupported for '{}'");
-  // else {
-  //   ASSERT(false); // Is validating a header that is unsupported is really exceptional?
-  // }
 
   return r;
 }
