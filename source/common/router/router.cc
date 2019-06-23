@@ -405,7 +405,7 @@ Http::FilterHeadersStatus Filter::decodeHeaders(Http::HeaderMap& headers, bool e
   ENVOY_STREAM_LOG(debug, "cluster '{}' match for URL '{}'", *callbacks_,
                    route_entry_->clusterName(), headers.Path()->value().getStringView());
 
-  if (config_.strict_check_headers_ && !config_.strict_check_headers_->empty()) {
+  if (config_.strict_check_headers_ != nullptr && !config_.strict_check_headers_->empty()) {
     for (const auto& header : *config_.strict_check_headers_) {
       const auto res = FilterUtility::StrictHeaderChecker::test(headers, header);
       if (!res.valid_) {

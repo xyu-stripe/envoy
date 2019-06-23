@@ -161,7 +161,7 @@ public:
         empty_stat_name_(stat_name_pool_.add("")), shadow_writer_(std::move(shadow_writer)),
         time_source_(time_source) {
     if (strict_check_headers.size() > 0) {
-      strict_check_headers_ = std::vector<Http::LowerCaseString>{};
+      strict_check_headers_ = std::make_unique<std::vector<Http::LowerCaseString>> ();
       for (const auto& header : strict_check_headers) {
         strict_check_headers_->emplace_back(Http::LowerCaseString(header));
       }
@@ -194,7 +194,7 @@ public:
   const bool emit_dynamic_stats_;
   const bool start_child_span_;
   const bool suppress_envoy_headers_;
-  absl::optional< std::vector<Http::LowerCaseString> > strict_check_headers_;
+  std::unique_ptr<std::vector<Http::LowerCaseString>> strict_check_headers_;
   std::list<AccessLog::InstanceSharedPtr> upstream_logs_;
   Http::Context& http_context_;
   Stats::StatNamePool stat_name_pool_;
